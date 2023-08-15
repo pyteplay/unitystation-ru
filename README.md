@@ -1,7 +1,6 @@
 [<img src="https://user-images.githubusercontent.com/7613738/35184899-b6a0aa8e-fdfb-11e7-91a8-bad8f19937b4.jpg" width="300">](http://store.steampowered.com/app/801140/Unitystation/)
 
 ## Поговори с нами
-Присоединяйтесь к нам в Discord:
 [<img src="https://www.seoclerk.com/pics/want57772-1PlHGI1515438378.png" width="75">](https://discord.gg/bZvQEQu4t2)
 
 ## Хочешь поучаствовать?
