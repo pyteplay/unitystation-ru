@@ -1,15 +1,3 @@
-# unitystation
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf30df5a44d74ace98fae0769b8a10c4)](https://www.codacy.com/gh/unitystation/unitystation/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=unitystation/unitystation&amp;utm_campaign=Badge_Grade)
-[![Tests](https://github.com/unitystation/unitystation/actions/workflows/test.yml/badge.svg)](https://github.com/unitystation/unitystation/actions/workflows/test.yml)
-[![GitHub last commit](https://img.shields.io/github/last-commit/unitystation/unitystation.svg)](https://github.com/unitystation/unitystation/commits/develop)
-[![Discord](https://img.shields.io/discord/273774715741667329.svg)](https://discord.gg/H6EunER)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-
-![built-with-resentment](http://forthebadge.com/images/badges/built-with-resentment.svg)
-![contains-technical-debt](http://forthebadge.com/images/badges/contains-technical-debt.svg)
-
-_Unitystation has been active since late 2016_
-
 Visit us on Steam:  
 [<img src="https://user-images.githubusercontent.com/7613738/35184899-b6a0aa8e-fdfb-11e7-91a8-bad8f19937b4.jpg" width="300">](http://store.steampowered.com/app/801140/Unitystation/)
 
