@@ -16,18 +16,18 @@ Visit us on Steam:
 See project updates on Patreon:  
 [<img src="https://vignette.wikia.nocookie.net/everyone-else-is-a-returnee/images/6/68/Patreon.png/revision/latest?cb=20161230133220&format=original" width="150">](https://www.patreon.com/unitystation)
 
-## Talk to us
-Please join us on Discord:  
-[<img src="https://www.seoclerk.com/pics/want57772-1PlHGI1515438378.png" width="75">](https://discord.gg/H6EunER)
+## Поговори с нами
+Присоединяйтесь к нам в Discord:
+[<img src="https://www.seoclerk.com/pics/want57772-1PlHGI1515438378.png" width="75">](https://discord.gg/bZvQEQu4t2)
 
-## Feel like getting involved?
-Read our Quick Start guide [here](https://unitystation.github.io/unitystation/contribution-guides/Starting-contribution/)
-1. [Get Unity Hub](https://unity3d.com/get-unity/download)
-2. Install editor version **2021.3.16f1 LTS**
-3. Fork the repo
-4. Add your changes
-5. Read the contribution guidelines
-6. Submit a pull request
+## Хочешь поучаствовать?
+Прочитайте наше краткое руководство [здесь] (https://unitystation.github.io/unitystation/contribution-guides/Starting-contribution/)
+1. [Получить Unity Hub] (https://unity3d.com/get-unity/download)
+2. Установите версию редактора **2021.3.16f1 LTS**.
+3. Разветвить репо
+4. Добавьте свои изменения
+5. Прочтите руководство по взносам
+6. Отправьте запрос на включение
 
 ## LICENSE
 
