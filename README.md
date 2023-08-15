@@ -12,6 +12,9 @@
 5. Прочтите руководство по взносам
 6. Отправьте запрос на включение
 
+## Поддержи нас на Бусти
+https://boosty.to/deadstation14
+
 ## LICENSE
 
 All code after [commit 44695c862d6d84cfc99354d6dfba1f0b70f20407 on 2017/03/12 at 11:39 PM CET](https://github.com/unitystation/unitystation/commit/44695c862d6d84cfc99354d6dfba1f0b70f20407) is licensed under [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
