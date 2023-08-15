@@ -6,7 +6,7 @@
 [<img src="https://www.seoclerk.com/pics/want57772-1PlHGI1515438378.png" width="75">](https://discord.gg/bZvQEQu4t2)
 
 ## Хочешь поучаствовать?
-Прочитайте наше краткое руководство [здесь] (https://unitystation.github.io/unitystation/contribution-guides/Starting-contribution/)
+
 1. [Получить Unity Hub] (https://unity3d.com/get-unity/download)
 2. Установите версию редактора **2021.3.16f1 LTS**.
 3. Разветвить репо
