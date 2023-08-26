@@ -15,6 +15,8 @@ using ScriptableObjects.Audio;
 using ScriptableObjects.Systems.Spells;
 using Systems.Antagonists.Antags;
 using UI.Core.Action;
+using Changeling;
+using static UniversalObjectPhysics;
 
 /// <summary>
 /// IC character information (job role, antag info, real name, etc). A body and their ghost link to the same mind
@@ -33,6 +35,9 @@ public class Mind : NetworkBehaviour, IActionGUI
 
 	//Antag
 	[SyncVar] private bool NetworkedisAntag;
+
+	//Type of Antagonist
+	[field: SyncVar] public JobType NetworkedAntagJob { get; private set; }
 
 	public GameObject PossessingObject
 	{
@@ -70,6 +75,7 @@ public class Mind : NetworkBehaviour, IActionGUI
 	public FloorSounds StepSound; //Why is this on the mind!!!, Should be on the body
 	public FloorSounds SecondaryStepSound;
 
+	private string pdaUplinkCode = "";
 
 	// Current way to check if it's not actually a ghost but a spectator, should set this not have it be the below.
 
@@ -253,6 +259,8 @@ public class Mind : NetworkBehaviour, IActionGUI
 	{
 		antag = newAntag;
 		NetworkedisAntag = newAntag != null;
+		NetworkedAntagJob = newAntag.Antagonist.AntagJobType;
+
 		ShowObjectives();
 		ActivateAntagAction(NetworkedisAntag);
 	}
@@ -345,6 +353,8 @@ public class Mind : NetworkBehaviour, IActionGUI
 	{
 		antag = null;
 		NetworkedisAntag = antag != null;
+		NetworkedAntagJob = JobType.NULL;
+
 		ActivateAntagAction(NetworkedisAntag);
 	}
 
@@ -702,8 +712,7 @@ public class Mind : NetworkBehaviour, IActionGUI
 		//Send Objectives
 		Chat.AddExamineMsgFromServer(playerMob, antag.GetObjectivesForPlayer());
 
-		if (playerMob.TryGetComponent<PlayerScript>(out var body) == false) return;
-		if (antag.Antagonist.AntagJobType == JobType.TRAITOR || antag.Antagonist.AntagJobType == JobType.SYNDICATE || antag.Antagonist is BloodBrother)
+		if (CodeWordManager.Instance.CodeWordRoles.Contains(NetworkedAntagJob) == true)
 		{
 			string codeWordsString = "Code Words:";
 			for (int i = 0; i < CodeWordManager.WORD_COUNT; i++)
@@ -718,7 +727,12 @@ public class Mind : NetworkBehaviour, IActionGUI
 			}
 
 			Chat.AddExamineMsgFromServer(playerMob, codeWordsString);
+		}
 
+		if (playerMob.TryGetComponent<PlayerScript>(out var body) == false) return;
+
+		if (CodeWordManager.Instance.CodeWordRoles.Contains(NetworkedAntagJob) == true || antag.Antagonist is BloodBrother == true)
+		{
 			if (body.OrNull()?.DynamicItemStorage == null) return;
 			var playerInventory = body.DynamicItemStorage.GetItemSlots();
 			foreach (var item in playerInventory)
@@ -729,10 +743,42 @@ public class Mind : NetworkBehaviour, IActionGUI
 
 				//Send Uplink code
 				Chat.AddExamineMsgFromServer(playerMob, $"PDA uplink code retrieved: {PDA.UplinkUnlockCode}");
+				pdaUplinkCode = PDA.UplinkUnlockCode;
 				//TODO Store same place as objectives it's Dumb being here,
 				//Means you can View the code of Any PDA If you're an antagonist
 			}
 		}
+	}
+
+	public string GetObjectives()
+	{
+		var objectives = "";
+		if (IsAntag == false) return "";
+		var playerMob = GetCurrentMob();
+
+		//Send Objectives
+		objectives += antag.GetObjectivesForPlayer();
+
+		if (playerMob.TryGetComponent<PlayerScript>(out var body) == false) return "";
+		if (antag.Antagonist.AntagJobType == JobType.TRAITOR || antag.Antagonist.AntagJobType == JobType.SYNDICATE || antag.Antagonist is BloodBrother)
+		{
+			string codeWordsString = "\nCode Words:";
+			for (int i = 0; i < CodeWordManager.WORD_COUNT; i++)
+			{
+				codeWordsString += $"\n-{CodeWordManager.Instance.Words[i]}";
+			}
+
+			codeWordsString += "\nResponses:";
+			for (int i = 0; i < CodeWordManager.WORD_COUNT; i++)
+			{
+				codeWordsString += $"\n-{CodeWordManager.Instance.Responses[i]}";
+			}
+
+			objectives += codeWordsString;
+
+			objectives += $"\nPDA uplink code retrieved:{pdaUplinkCode}";
+		}
+		return objectives;
 	}
 
 	/// <summary>

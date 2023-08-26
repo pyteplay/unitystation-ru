@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -112,6 +113,9 @@ namespace UI.Chat_UI
 
 		[BoxGroup("Animation"), Range(0,1)] public float ChatContentMinimumAlpha = 0f;
 
+		[field: SerializeField] public List<TMP_FontAsset> Fonts = new List<TMP_FontAsset>();
+		public int FontIndexToUse = -1;
+
 
 		public void SetPreferenceChatContent(float preference)
 		{
@@ -119,7 +123,6 @@ namespace UI.Chat_UI
 			PlayerPrefs.SetFloat(PlayerPrefKeys.ChatContentMinimumAlpha, preference);
 			PlayerPrefs.Save();
 		}
-
 
 		public float GetPreferenceChatContent()
 		{
@@ -133,7 +136,6 @@ namespace UI.Chat_UI
 				PlayerPrefs.Save();
 				return 0f;
 			}
-
 		}
 
 		public void SetPreferenceChatBackground(float preference)
@@ -155,7 +157,6 @@ namespace UI.Chat_UI
 				PlayerPrefs.Save();
 				return 0f;
 			}
-
 		}
 
 
@@ -164,6 +165,7 @@ namespace UI.Chat_UI
 			base.Awake();
 			ChatMinimumBackgroundAlpha = GetPreferenceChatBackground();
 			ChatContentMinimumAlpha = GetPreferenceChatContent();
+			FontIndexToUse = PlayerPrefs.GetInt("fontPref", -1);
 		}
 
 		/// <summary>
@@ -316,7 +318,7 @@ namespace UI.Chat_UI
 			GameObject entry = entryPool.GetChatEntry();
 			var chatEntry = entry.GetComponent<ChatEntry>();
 			chatEntry.ViewportTransform = viewportTransform;
-			chatEntry.SetText(message, languageSprite);
+			chatEntry.SetText(message, languageSprite, FontIndexToUse != -1 ? Fonts[FontIndexToUse] : null);
 			allEntries.Add(chatEntry);
 			SetEntryTransform(entry);
 			CheckLengthOfChatLog();
@@ -736,18 +738,39 @@ namespace UI.Chat_UI
 		/// </summary>
 		private void UpdateInputLabel()
 		{
+			var localStatus = selectedChannels.GetFlags().Any(x => RadioChannels.Contains((ChatChannel)x))
+				? $"{SpeakRadioText()}" : "to nearby characters";
 			if ((SelectedChannels & ChatChannel.OOC) == ChatChannel.OOC)
 			{
-				chatInputLabel.text = "OOC:";
+				chatInputLabel.text = "Speaking Out Of Character (OOC):";
 			}
 			else if ((SelectedChannels & ChatChannel.Ghost) == ChatChannel.Ghost)
 			{
-				chatInputLabel.text = "Ghost:";
+				chatInputLabel.text = "Speaking as a Ghost:";
 			}
 			else
 			{
-				chatInputLabel.text = "Say:";
+				chatInputLabel.text = PlayerManager.
+					LocalPlayerScript != null ?
+					$"Say as {PlayerManager.LocalPlayerScript.visibleName} {localStatus}:"
+					: "Say:";
 			}
+		}
+
+		private string SpeakRadioText()
+		{
+			if (selectedChannels.GetFlags().Count() > 3) return "to multiple channels.";
+			var speakTo = "to ";
+			int count = selectedChannels.GetFlags().Count() - 1;
+			int index = -1;
+			foreach (var channel in selectedChannels.GetFlags())
+			{
+				index++;
+				if (channel.ToString() == "None") continue;
+				speakTo += index != count ? $"{channel.ToString()}, " : $"and {channel.ToString()} ";
+			}
+
+			return speakTo + "channels";
 		}
 
 		/// <summary>

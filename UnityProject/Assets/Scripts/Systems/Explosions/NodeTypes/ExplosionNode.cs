@@ -8,6 +8,7 @@ using Systems.Pipes;
 using Items;
 using TileManagement;
 using AddressableReferences;
+using Player;
 
 
 namespace Systems.Explosions
@@ -120,13 +121,19 @@ namespace Systems.Explosions
 
 			foreach (var player in matrix.Get<LivingHealthMasterBase>(v3int, ObjectType.Player, true))
 			{
-
 				// do damage
-				player.GetComponent<LivingHealthMasterBase>()
-					.ApplyDamageAll(null, DamageDealt, AttackType.Bomb, DamageType.Brute, default, TraumaticDamageTypes.NONE, 75);
-
+				player.ApplyDamageAll(null, DamageDealt, AttackType.Bomb, DamageType.Brute, default, TraumaticDamageTypes.NONE, 75);
+				FlashPlayer(player, v3int);
 			}
 			return EnergyExpended;
+		}
+
+		private void FlashPlayer(LivingHealthMasterBase player, Vector3Int v3int)
+		{
+			var distance = Vector3Int.Distance(player.gameObject.AssumedWorldPosServer().CutToInt(), v3int);
+			if (distance > 25) return;
+			if (player.gameObject.TryGetComponent<PlayerFlashEffects>(out var flashEffector) == false) return;
+			flashEffector.ServerSendMessageToClient(player.gameObject, distance < 15 ? 12 : 4, true, false);
 		}
 
 		//triggered by ChemExplosion, this method says what to do when explosion is inside body
@@ -164,14 +171,13 @@ namespace Systems.Explosions
 			}
 		}
 
-		public async Task TimedEffect(Vector3Int position, float time, string effectName, OverlayType effectOverlayType, TileChangeManager tileChangeManager)
+		public void TimedEffect(Vector3Int position, float time, string effectName, OverlayType effectOverlayType, TileChangeManager tileChangeManager)
 		{
 			//Dont add effect if it is already there
 			if (tileChangeManager.MetaTileMap.HasOverlay(position, TileType.Effects, effectName)) return;
-
 			tileChangeManager.MetaTileMap.AddOverlay(position, TileType.Effects, effectName);
-			await Task.Delay((int)time);
-			tileChangeManager.MetaTileMap.RemoveOverlaysOfType(position, LayerType.Effects, effectOverlayType);
+			ExplosionManager.CleanupEffectLater(time * 0.001f, tileChangeManager.MetaTileMap,
+				position, effectOverlayType);
 		}
 	}
 }
